@@ -9,7 +9,7 @@ int main() {
     printf("\nPARENT PARAM: pid=%d ppid=%d\n", pid, ppid);
     
     if (fork() == 0) {
-        execl("./child", "child", NULL);
+        execl("./build/child", "child", NULL);
     }
     
     system("ps xf");
