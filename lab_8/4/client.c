@@ -13,7 +13,6 @@ void client(int fdr, int fdw)
 {
     char buffer[BUFFER_SIZE];
 
-    // Чтение имени файла из канала для записи (chan1)
     ssize_t bytes_read = read(fdr, buffer, sizeof(buffer));
     if (bytes_read == -1)
     {
@@ -22,7 +21,6 @@ void client(int fdr, int fdw)
     }
     printf("Client received file name: %s\n", buffer);
 
-    // Открытие файла для чтения
     int input_file = open(buffer, O_RDONLY);
     if (input_file == -1)
     {
@@ -30,7 +28,6 @@ void client(int fdr, int fdw)
         exit(1);
     }
 
-    // Чтение данных из файла и запись в канал для записи (chan2)
     while ((bytes_read = read(input_file, buffer, sizeof(buffer))) > 0)
     {
         if (write(fdw, buffer, bytes_read) == -1)
@@ -45,10 +42,9 @@ void client(int fdr, int fdw)
 
 int main()
 {
-    const char *chan1 = "/tmp/chan1";  // Имя канала для чтения
-    const char *chan2 = "/tmp/chan2";  // Имя канала для записи
+    const char *chan1 = "/tmp/chan1";
+    const char *chan2 = "/tmp/chan2"; 
 
-    // Открытие каналов
     int fdr = open(chan1, O_RDONLY);
     if (fdr == -1)
     {
@@ -63,10 +59,8 @@ int main()
         exit(1);
     }
 
-    // Запуск клиентской части программы
     client(fdr, fdw);
 
-    // Закрытие файловых дескрипторов
     close(fdr);
     close(fdw);
 

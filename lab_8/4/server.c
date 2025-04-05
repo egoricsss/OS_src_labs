@@ -13,7 +13,6 @@ void server(int fdr, int fdw)
 {
     char buffer[BUFFER_SIZE];
 
-    // Запись имени файла в канал для записи (chan1)
     const char *file_name = "../input.txt";
     if (write(fdw, file_name, strlen(file_name) + 1) == -1)
     {
@@ -21,7 +20,6 @@ void server(int fdr, int fdw)
         exit(1);
     }
 
-    // Чтение данных из канала для чтения (chan2)
     ssize_t bytes_read = read(fdr, buffer, sizeof(buffer));
     if (bytes_read == -1)
     {
@@ -34,10 +32,9 @@ void server(int fdr, int fdw)
 
 int main()
 {
-    const char *chan1 = "/tmp/chan1";  // Имя канала для записи
-    const char *chan2 = "/tmp/chan2";  // Имя канала для чтения
+    const char *chan1 = "/tmp/chan1";  
+    const char *chan2 = "/tmp/chan2"; 
 
-    // Создание именованных каналов (FIFO)
     if (mknod(chan1, S_IFIFO | 0666, 0) == -1)
     {
         perror("Error creating chan1");
@@ -65,14 +62,11 @@ int main()
         exit(1);
     }
 
-    // Запуск серверной части программы
     server(fdr, fdw);
 
-    // Закрытие файловых дескрипторов
     close(fdr);
     close(fdw);
 
-    // Удаление именованных каналов
     unlink(chan1);
     unlink(chan2);
 
